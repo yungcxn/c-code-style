@@ -1,6 +1,7 @@
 # Recommended C style and coding rules
 
 This document describes C code style used by Tilen MAJERLE in his projects and libraries.
+It's based off of [this guide](https://github.com/MaJerle/c-code-style).
 
 ## Table of Contents
 
@@ -17,7 +18,6 @@ This document describes C code style used by Tilen MAJERLE in his projects and l
   - [Compound statements](#compound-statements)
     - [Switch statement](#switch-statement)
   - [Macros and preprocessor directives](#macros-and-preprocessor-directives)
-  - [Documentation](#documentation)
   - [Header/source files](#headersource-files)
   - [Clang format integration](#clang-format-integration)
   - [Artistic style configuration](#artistic-style-configuration)
@@ -394,7 +394,6 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 
 - Always use `/* comment */` for comments, even for *single-line* comment
 - Always include check for `C++` with `extern` keyword in header file
-- Every function MUST include *doxygen-enabled* comment, even if function is `static`
 - Use English names/text for functions, variables, comments
 - Use *lowercase* characters for variables
 - Use *underscore* if variable contains multiple names, eg. `force_redraw`. Do not use `forceRedraw`
@@ -407,6 +406,9 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 
 ## Comments
 
+- The most important rule concerning comments: Only comment if your code is not self-explanatory!
+- Comments are important but may result in bloat of text: Use them only if needed and efficiently
+
 - Comments starting with `//` are not allowed. Always use `/* comment */`, even for single-line comment
 ```c
 //This is comment (wrong)
@@ -418,10 +420,6 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 /*
  * This is multi-line comments,
  * written in 2 lines (ok)
- */
-
-/**
- * Wrong, use double-asterisk only for doxygen documentation
  */
 
 /*
@@ -570,7 +568,6 @@ char *p, *n;
 - Structure or enumeration may contain `typedef` keyword
 - All structure members MUST be lowercase
 - All enumeration members SHOULD be uppercase
-- Structure/enumeration MUST follow doxygen documentation syntax
 
 When structure is declared, it may use one of `3` different options:
 
@@ -1049,144 +1046,12 @@ if (a) {                    /* If a is true */
 #endif /* !defined(XYZ) */
 ```
 
-## Documentation
-
-Documented code allows doxygen to parse and generate html/pdf/latex output, thus it is very important to do it properly at an early stage of the project.
-
-- Use doxygen-enabled documentation style for `variables`, `functions` and `structures/enumerations`
-- Always use `\` for doxygen, do not use `@`
-- Always use `5x4` spaces (`5` tabs) offset from beginning of line for text
-```c
-/**
- * \brief           Holds pointer to first entry in linked list
- *                  Beginning of this text is 5 tabs (20 spaces) from beginning of line
- */
-static
-type_t* list;
-```
-
-- Every structure/enumeration member MUST include documentation
-- Use `12x4 spaces` offset for beginning of comment
-```c
-/**
- * \brief           This is point struct
- * \note            This structure is used to calculate all point
- *                      related stuff
- */
-typedef struct {
-    int32_t x;                                  /*!< Point X coordinate */
-    int32_t y;                                  /*!< Point Y coordinate */
-    int32_t size;                               /*!< Point size.
-                                                    Since comment is very big,
-                                                    you may go to next line */
-} point_t;
-
-/**
- * \brief           Point color enumeration
- */
-typedef enum {
-    COLOR_RED,                                  /*!< Red color. This comment has 12x4
-                                                    spaces offset from beginning of line */
-    COLOR_GREEN,                                /*!< Green color */
-    COLOR_BLUE,                                 /*!< Blue color */
-} point_color_t;
-```
-
-- Documentation for functions MUST be written in function implementation (source file usually)
-- Function MUST include `brief` and all parameters documentation
-- Every parameter MUST be noted if it is `in` or `out` for *input* and *output* respectively
-- Function MUST include `return` parameter if it returns something. This does not apply for `void` functions
-- Function can include other doxygen keywords, such as `note` or `warning`
-- Use colon `:` between parameter name and its description
-```c
-/**
- * \brief           Sum `2` numbers
- * \param[in]       a: First number
- * \param[in]       b: Second number
- * \return          Sum of input values
- */
-int32_t
-sum(int32_t a, int32_t b) {
-    return a + b;
-}
-
-/**
- * \brief           Sum `2` numbers and write it to pointer
- * \note            This function does not return value, it stores it to pointer instead
- * \param[in]       a: First number
- * \param[in]       b: Second number
- * \param[out]      result: Output variable used to save result
- */
-void
-void_sum(int32_t a, int32_t b, int32_t* result) {
-    *result = a + b;
-}
-```
-
-- If function returns member of enumeration, use `ref` keyword to specify which one
-```c
-/**
- * \brief           My enumeration
- */
-typedef enum {
-    MY_ERR,                                     /*!< Error value */
-    MY_OK                                       /*!< OK value */
-} my_enum_t;
-
-/**
- * \brief           Check some value
- * \return          \ref MY_OK on success, member of \ref my_enum_t otherwise
- */
-my_enum_t
-check_value(void) {
-    return MY_OK;
-}
-```
-
-- Use notation (\`NULL\` => `NULL`) for constants or numbers
-```c
-/**
- * \brief           Get data from input array
- * \param[in]       in: Input data
- * \return          Pointer to output data on success, `NULL` otherwise
- */
-const void *
-get_data(const void* in) {
-    return in;
-}
-```
-
-- Documentation for macros MUST include `hideinitializer` doxygen command
-```c
-/**
- * \brief           Get minimal value between `x` and `y`
- * \param[in]       x: First value
- * \param[in]       y: Second value
- * \return          Minimal value between `x` and `y`
- * \hideinitializer
- */
-#define MIN(x, y)       ((x) < (y) ? (x) : (y))
-```
-
 ## Header/source files
 
 - Leave single empty line at the end of file
-- Every file MUST include doxygen annotation for `file` and `brief` description followed by empty line (when using doxygen)
-```c
-/**
- * \file            template.h
- * \brief           Template include file
- */
-                    /* Here is empty line */
-```
 
-- Every file (*header* or *source*) MUST include license (opening comment includes single asterisk as this MUST be ignored by doxygen)
-- Use the same license as already used by project/library
+- Use the same license as already used by project/library IF NECESSARY
 ```c
-/**
- * \file            template.h
- * \brief           Template include file
- */
 
 /*
  * Copyright (c) year FirstName LASTNAME
