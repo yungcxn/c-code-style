@@ -18,9 +18,6 @@ It's based off of [this guide](https://github.com/MaJerle/c-code-style).
   - [Switch statement](#switch-statement)
   - [Macros and preprocessor directives](#macros-and-preprocessor-directives)
   - [Header/source files](#headersource-files)
-  - [Clang format integration](#clang-format-integration)
-  - [Artistic style configuration](#artistic-style-configuration)
-  - [Eclipse formatter](#eclipse-formatter)
 
 ## The single most important rule
 
@@ -1064,24 +1061,3 @@ extern "C" {
 
 #endif /* TEMPLATE_HDR_H */
 ```
-
-## Artistic style configuration
-
-[AStyle](http://astyle.sourceforge.net/) is a great piece of software that can
-help with formatting the code based on input configuration.
-
-This repository contains `astyle-code-format.cfg` file which can be used with `AStyle` software.
-
-```
-astyle --options="astyle-code-format.cfg" "input_path/*.c,*.h" "input_path2/*.c,*.h"
-```
-
-> Artistic style configuration is obsolete and no longer updated
-
-## Eclipse formatter
-
-Repository contains `eclipse-ext-kr-format.xml` file that can be used with
-eclipse-based toolchains to set formatter options.
-
-It is based on K&R formatter with modifications to respect above rules.
-You can import it within eclipse settings, `Preferences -> LANGUAGE -> Code Style -> Formatter` tab.
