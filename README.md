@@ -12,6 +12,7 @@ It's based off of [this guide](https://github.com/MaJerle/c-code-style).
   - [General rules](#general-rules)
   - [Comments](#comments)
   - [Functions](#functions)
+  - [Error-handling](#error-handling)
   - [Variables](#variables)
   - [Structures, enumerations, typedefs](#structures-enumerations-typedefs)
   - [Compound statements](#compound-statements)
@@ -437,6 +438,26 @@ get_string(void) {
 int32_t foo(void) {
   return 0;
 }
+```
+
+## Error handling
+
+- Exceptions are handled via integer return values
+- Avoid negative values
+- As in Kernel development, returning zero means success, non-zero values indicate errors
+- It's recommended to describe your codes by macros in a header file, enums are also sufficient
+
+```c
+// error_codes.h
+#ifndef ERROR_CODES_H
+#define ERROR_CODES_H
+
+#define SUCCESS 0
+#define ERR_FILE_NOT_FOUND 1
+#define ERR_INVALID_INPUT 2
+#define ERR_MEMORY_ALLOCATION_FAILED 3
+// Add more error definitions as needed...
+#endif 
 ```
 
 ## Variables
@@ -1020,8 +1041,6 @@ if (a) {          /* If a is true */
 ```
 
 - Header file MUST include guard `#ifndef`
-- Header file MUST include `C++` check
-- Include external header files outside `C++` check
 - Include external header files with STL C files first followed by application custom files
 - Header file MUST include only every other header file in order to compile correctly, but not more (.c should include the rest if REQUIRED)
 - Header file MUST only expose module public variables/types/functions
@@ -1037,7 +1056,7 @@ extern int32_t my_variable; /* This is global variable declaration in header */
 /* file.c ... */
 int32_t my_variable;    /* Actually defined in source */
 ```
-- Never include `.c` files in another `.c` file
+- Never include `.c` files in another `.c` file, use the linker!
 - `.c` file should first include corresponding `.h` file, later others, unless otherwise explicitly necessary
 - Do not include module private declarations in header file
 
